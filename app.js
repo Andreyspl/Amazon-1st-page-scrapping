@@ -13,7 +13,14 @@ app.use((req, res, next) => {
 });
 
 async function fetchAmazonPage(keyword) {
-  const response = await axios.get(`https://www.amazon.com/s?k=${keyword}`);
+  // Adiciona um atraso de 1 segundo
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  const response = await axios.get(`https://www.amazon.com/s?k=${keyword}`, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    }
+  });
   return response.data;
 }
 
