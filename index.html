@@ -3,37 +3,50 @@
 <head>
   <title>Amazon Scraper</title>
   <style>
-    /* Aqui é onde você adicionará seus estilos CSS */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #results {
+      margin-top: 20px;
+    }
+    .product {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .product img {
+      max-width: 100px;
+      max-height: 100px;
+    }
   </style>
 </head>
 <body>
-  <input id="keyword" type="text" placeholder="Digite a palavra-chave">
-  <button id="scrape">Raspar</button>
+  <input type="text" id="keyword" placeholder="Enter keyword">
+  <button id="scrape">Scrape</button>
   <div id="results"></div>
 
   <script>
-    document.getElementById('scrape').addEventListener('click', function() {
-  const keyword = document.getElementById('keyword').value;
-  fetch(`/api/scrape?keyword=${encodeURIComponent(keyword)}`)
-    .then(response => response.json())
-    .then(data => {
-      // Aqui é onde você exibirá os resultados na página
-    })
-    .catch(error => {
-      console.error('Ocorreu um erro:', error);
+    document.getElementById('scrape').addEventListener('click', async () => {
+    const keyword = document.getElementById('keyword').value;
+    const response = await fetch(`http://localhost:3000/api/scrape?keyword=${keyword}`);
+    const data = await response.json();
+      
+    // Limpa os resultados antigos
+    document.getElementById('results').innerHTML = '';
+
+    // Exibe os novos resultados
+    data.forEach(product => {
+        const productDiv = document.createElement('div');
+        productDiv.className = 'product';
+        productDiv.innerHTML = `
+          <h2>${product.title}</h2>
+          <img src="${product.imageUrl}" alt="${product.title}">
+          <p>Rating: ${product.rating}</p>
+          <p>Review Count: ${product.reviewCount}</p>
+        `;
+        document.getElementById('results').appendChild(productDiv);
+      });
     });
-})
-    .then(data => {
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '';
-    data.forEach(item => {
-    const itemDiv = document.createElement('div');
-    itemDiv.textContent = `Título: ${item.title}, Avaliação: ${item.rating}, Avaliações: ${item.reviews}, URL da imagem: ${item.imageUrl}`;
-    resultsDiv.appendChild(itemDiv);
-  });
-})
-app.use(express.static('.'));
-    /* Aqui é onde você adicionará seu código JavaScript */
   </script>
 </body>
 </html>

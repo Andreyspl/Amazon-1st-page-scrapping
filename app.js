@@ -1,55 +1,58 @@
 const express = require('express');
-const app = express();
-const port = 3000;
+const axios = require('axios');
 const cheerio = require('cheerio');
 
-app.get('/api/scrape', async (req, res) => {
-  // ... código anterior ...
+const app = express();
+const port = 3000;
 
-app.get('/', (req, res) => {
-    res.send('Olá, Mundo!');
+app.use(express.static('public'));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
+async function fetchAmazonPage(keyword) {
+  const response = await axios.get(`https://www.amazon.com/s?k=${keyword}`);
+  return response.data;
+}
+
+function parseProductDetails(html) {
+  const $ = cheerio.load(html);
+  const productDetails = [];
+
+  $('.s-result-item').each((index, element) => {
+    const title = $(element).find('.a-link-normal .a-text-normal').text();
+    const rating = $(element).find('.a-icon-star-small .a-icon-alt').text();
+    const reviewCount = $(element).find('.a-link-normal .a-size-base').text();
+    const imageUrl = $(element).find('.a-link-normal .s-image').attr('src');
+
+    productDetails.push({
+      title,
+      rating,
+      reviewCount,
+      imageUrl
+    });
+  });
+
+  return productDetails;
+}
+
+app.get('/api/scrape', async (req, res) => {
+  const keyword = req.query.keyword;
+  const html = await fetchAmazonPage(keyword);
+  const productDetails = parseProductDetails(html);
+  res.json(productDetails);
 });
 
 app.listen(port, () => {
-    console.log(`Aplicação rodando na porta ${port}`);
+  console.log(`App listening at http://localhost:${port}`);
 });
 
-app.get('/api/scrape', (req, res) => {
-    const keyword = req.query.keyword;
-    // Aqui é onde o processo de raspagem será iniciado
-  });
+const path = require('path');
 
-const axios = require('axios');
+// ...
 
-app.get('/api/scrape', async (req, res) => {
-    const keyword = req.query.keyword;
-    const url = `https://www.amazon.com/s?k=${encodeURIComponent(keyword)}`;
-  
-    try {
-      const response = await axios.get(url);
-      const htmlContent = response.data;
-      // O conteúdo HTML da página de resultados da Amazon agora está na variável htmlContent
-    } catch (error) {
-      res.status(500).send({ error: 'Ocorreu um erro ao buscar a página de resultados da Amazon' });
-    }
-});
-
-const $ = cheerio.load(htmlContent);
-const productDetails = [];
-
-$('.s-result-item').each((index, element) => {
-  const title = $(element).find('.a-link-normal .a-text-normal').text();
-  const rating = $(element).find('.a-icon-alt').text();
-  const reviews = $(element).find('.a-size-small .a-link-normal').text();
-  const imageUrl = $(element).find('.s-image').attr('src');
-
-  productDetails.push({
-    title,
-    rating,
-    reviews,
-    imageUrl
-  });
-});
-
-res.send(productDetails);
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
