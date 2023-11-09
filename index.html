@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Amazon Scraper</title>
+  <style>
+    /* Aqui é onde você adicionará seus estilos CSS */
+  </style>
+</head>
+<body>
+  <input id="keyword" type="text" placeholder="Digite a palavra-chave">
+  <button id="scrape">Raspar</button>
+  <div id="results"></div>
+
+  <script>
+    document.getElementById('scrape').addEventListener('click', function() {
+  const keyword = document.getElementById('keyword').value;
+  fetch(`/api/scrape?keyword=${encodeURIComponent(keyword)}`)
+    .then(response => response.json())
+    .then(data => {
+      // Aqui é onde você exibirá os resultados na página
+    })
+    .catch(error => {
+      console.error('Ocorreu um erro:', error);
+    });
+})
+    .then(data => {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+    data.forEach(item => {
+    const itemDiv = document.createElement('div');
+    itemDiv.textContent = `Título: ${item.title}, Avaliação: ${item.rating}, Avaliações: ${item.reviews}, URL da imagem: ${item.imageUrl}`;
+    resultsDiv.appendChild(itemDiv);
+  });
+})
+app.use(express.static('.'));
+    /* Aqui é onde você adicionará seu código JavaScript */
+  </script>
+</body>
+</html>
