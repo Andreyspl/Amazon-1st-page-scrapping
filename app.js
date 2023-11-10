@@ -14,16 +14,31 @@ app.use((req, res, next) => {
   next();
 });
 
+// User-Agent list
+const userAgentList = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+  // Add more User-Agent strings here
+];
+
 // Fetches the Amazon page for a given keyword
 async function fetchAmazonPage(keyword) {
+  // Wait for 1 second
   await new Promise(resolve => setTimeout(resolve, 1000));
 
-  const response = await axios.get(`https://www.amazon.com/s?k=${keyword}`, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
-    }
-  });
-  return response.data;
+  // Choose a random User-Agent
+  const userAgent = userAgentList[Math.floor(Math.random() * userAgentList.length)];
+
+  try {
+    const response = await axios.get(`https://www.amazon.com/s?k=${keyword}`, {
+      headers: {
+        'User-Agent': userAgent
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to fetch Amazon page: ${error}`);
+    return '';
+  }
 }
 
 // Parses the product details from the HTML of an Amazon page
@@ -53,7 +68,15 @@ function parseProductDetails(html) {
 // Endpoint to scrape Amazon for a given keyword
 app.get('/api/scrape', async (req, res) => {
   const keyword = req.query.keyword;
+  if (!keyword) {
+    return res.status(400).json({ error: 'The keyword cannot be empty' });
+  }
+
   const html = await fetchAmazonPage(keyword);
+  if (!html) {
+    return res.status(500).json({ error: 'Failed to scrape Amazon' });
+  }
+
   const productDetails = parseProductDetails(html);
   res.json(productDetails);
 });
