@@ -46,7 +46,7 @@ The code is well-commented to provide clarity about the logic and process. This 
 1. Clone the repository to your local computer.
 2. Navigate to the project directory in the terminal.
 3. Make sure you have NodeJs on your pc (it's necessary), then install the project dependencies with the command `npm install`.
-4. Start the server with the command `npm start`.
+4. Start the server with the command `node app.js`.
 5. Open a web browser and navigate to `http://localhost:3000` to see the application in action.
 
 ## Note
@@ -103,7 +103,7 @@ O código é bem comentado para oferecer clareza sobre a lógica e o processo. E
 1. Clone o repositório para o seu computador local.
 2. Navegue até o diretório do projeto no terminal.
 3. Certifique-se que tem o NodeJs em seu pc (ele é necessário), após, instale as dependências do projeto com o comando `npm install`.
-4. Inicie o servidor com o comando `npm start`.
+4. Inicie o servidor com o comando `node app.js`.
 5. Abra um navegador web e navegue até `http://localhost:3000` para ver a aplicação em ação.
 
 ## Nota
