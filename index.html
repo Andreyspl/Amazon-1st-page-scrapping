@@ -2,47 +2,101 @@
 <html>
 <head>
   <title>Amazon Scraper</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+        background: #ffffff;
+        padding: 0;
+        margin: 0;
+    }
+    #keyword, #scrape {
+        width: 100%;
+        margin-bottom: 20px;
     }
     #results {
-      margin-top: 20px;
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
     }
     .product {
-      border: 1px solid #ddd;
-      padding: 10px;
-      margin-bottom: 10px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
     }
     .product img {
-      max-width: 100px;
-      max-height: 100px;
+        max-width: 100px;
+        max-height: 100px;
+    }
+    .navbar {
+        background-color: #232f3e;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    .nav-link {
+        color: #48a3c6;
+    }
+    .btn-primary {
+        background-color: #e47911;
+        border-color: #e47911;
+    }
+    .navbar-brand {
+        height: 80px;
+    }
+    .navbar-brand img {
+        height: 100%;
     }
   </style>
 </head>
 <body>
-  <input type="text" id="keyword" placeholder="Enter keyword">
-  <button id="scrape">Scrape</button>
+    <nav class="navbar navbar-expand-lg navbar-dark m-0">
+        <div class="container-fluid">
+            <a class="navbar-brand me-5" href="#"><img src="https://pngimg.com/uploads/amazon/amazon_PNG25.png" alt="Amazon Logo"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 fw-bold">
+                    <li class="nav-item me-3">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link" target="_blank" href="https://github.com/Andreyspl/Amazon-1st-page-scrapping">GitHub Repo</a>
+                    </li>
+                </ul>
+                <form class="d-flex flex-grow-1 mt-3">
+                    <input type="text" id="keyword" placeholder="Enter keyword" aria-label="Keyword" class="form-control me-2 flex-grow-1">
+                    <button id="scrape" class="btn btn-primary flex-shrink-1" style="width: auto;">Scrape</button>
+                </form>
+            </div>
+        </div>
+    </nav>    
   <div id="results"></div>
 
   <script>
     document.getElementById('scrape').addEventListener('click', async () => {
-    const keyword = document.getElementById('keyword').value;
-    const response = await fetch(`http://localhost:3000/api/scrape?keyword=${keyword}`);
-    const data = await response.json();
-      
-    // Limpa os resultados antigos
-    document.getElementById('results').innerHTML = '';
+      const keyword = document.getElementById('keyword').value;
+      const response = await fetch(`http://localhost:3000/api/scrape?keyword=${keyword}`);
+      const data = await response.json();
+    
+      // Limpa os resultados antigos
+      document.getElementById('results').innerHTML = '';
 
-    // Exibe os novos resultados
-    data.forEach(product => {
+      // Exibe os novos resultados
+      data.forEach(product => {
         const productDiv = document.createElement('div');
-        productDiv.className = 'product';
+        productDiv.className = 'card m-3';
+        productDiv.style.width = '18rem';
         productDiv.innerHTML = `
-          <h2>${product.title}</h2>
-          <img src="${product.imageUrl}" alt="${product.title}">
-          <p>Rating: ${product.rating}</p>
-          <p>Review Count: ${product.reviewCount}</p>
+          <img src="${product.imageUrl}" class="card-img-top" alt="${product.title}">
+          <div class="card-body">
+            <h5 class="card-title">${product.title}</h5>
+            <p class="card-text">Rating: ${product.rating}</p>
+            <p class="card-text">Review Count: ${product.reviewCount}</p>
+            <a href="#" class="btn btn-primary">Ver Detalhes</a>
+          </div>
         `;
         document.getElementById('results').appendChild(productDiv);
       });
