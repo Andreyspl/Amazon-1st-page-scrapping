@@ -13,7 +13,6 @@ app.use((req, res, next) => {
 });
 
 async function fetchAmazonPage(keyword) {
-  // Adiciona um atraso de 1 segundo
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   const response = await axios.get(`https://www.amazon.com/s?k=${keyword}`, {
@@ -34,12 +33,15 @@ function parseProductDetails(html) {
     const reviewCount = $(element).find('.a-link-normal .a-size-base').text();
     const imageUrl = $(element).find('.a-link-normal .s-image').attr('src');
 
-    productDetails.push({
-      title,
-      rating,
-      reviewCount,
-      imageUrl
-    });
+    // Verifique se cada item tem uma foto, classificação, número de classificações e nome
+    if (title && rating && reviewCount && imageUrl) {
+      productDetails.push({
+        title,
+        rating,
+        reviewCount,
+        imageUrl
+      });
+    }
   });
 
   return productDetails;
@@ -57,8 +59,6 @@ app.listen(port, () => {
 });
 
 const path = require('path');
-
-// ...
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
