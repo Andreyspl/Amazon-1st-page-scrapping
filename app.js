@@ -5,13 +5,16 @@ const cheerio = require('cheerio');
 const app = express();
 const port = 3000;
 
+// Serve static files from the "public" directory
 app.use(express.static('public'));
 
+// Set CORS headers
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   next();
 });
 
+// Fetches the Amazon page for a given keyword
 async function fetchAmazonPage(keyword) {
   await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -23,6 +26,7 @@ async function fetchAmazonPage(keyword) {
   return response.data;
 }
 
+// Parses the product details from the HTML of an Amazon page
 function parseProductDetails(html) {
   const $ = cheerio.load(html);
   const productDetails = [];
@@ -32,8 +36,7 @@ function parseProductDetails(html) {
     const rating = $(element).find('.a-icon-star-small .a-icon-alt').text();
     const reviewCount = $(element).find('.a-link-normal .a-size-base').text();
     const imageUrl = $(element).find('.a-link-normal .s-image').attr('src');
-
-    // Verifique se cada item tem uma foto, classificação, número de classificações e nome
+    // Only products with title, rating, reviewCount and image will be scrapped
     if (title && rating && reviewCount && imageUrl) {
       productDetails.push({
         title,
@@ -47,6 +50,7 @@ function parseProductDetails(html) {
   return productDetails;
 }
 
+// Endpoint to scrape Amazon for a given keyword
 app.get('/api/scrape', async (req, res) => {
   const keyword = req.query.keyword;
   const html = await fetchAmazonPage(keyword);
@@ -54,12 +58,14 @@ app.get('/api/scrape', async (req, res) => {
   res.json(productDetails);
 });
 
+// Start the server
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
 
 const path = require('path');
 
+// Serve the index.html file
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
