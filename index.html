@@ -74,7 +74,7 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item me-3">
-                        <a class="nav-link" target="_blank" href="https://github.com/Andreyspl/Amazon-1st-page-scrapping">GitHub Repo</a>
+                        <a class="nav-link" target="_blank" href="https://github.com/Andreyspl/Amazon-scrapping">GitHub Repo</a>
                     </li>
                 </ul>
 
@@ -123,12 +123,12 @@
             productDiv.className = 'card m-3';
             productDiv.style.width = '18rem';
             productDiv.innerHTML = `
-              <img src="${product.imageUrl}" class="card-img-top" alt="${product.title}">
+              <img src="${product.imageUrl}" class="card-img-top img-thumbnail" alt="${product.title}">
               <div class="card-body">
                 <h5 class="card-title">${product.title}</h5>
                 <p class="card-text">Rating: ${product.rating}</p>
                 <p class="card-text">Review Count: ${product.reviewCount}</p>
-                <a href="#" class="btn btn-primary">View Details</a>
+                <a href="${product.productLink}" target="_blank" class="btn btn-primary">View Details</a>
               </div>
             `;
             document.getElementById('results').appendChild(productDiv);

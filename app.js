@@ -55,13 +55,15 @@ function parseProductDetails(html) {
     const rating = $(element).find('.a-icon-star-small .a-icon-alt').text();
     const reviewCount = $(element).find('.a-link-normal .a-size-base').text();
     const imageUrl = $(element).find('.a-link-normal .s-image').attr('src');
-    // Only products with title, rating, reviewCount and image will be scrapped
-    if (title && rating && reviewCount && imageUrl) {
+    const productLink = $(element).find('.a-link-normal.a-text-normal').attr('href');
+    // Only products with title, rating, reviewCount, image and productLink will be scrapped
+    if (title && rating && reviewCount && imageUrl && productLink) {
       productDetails.push({
         title,
         rating,
         reviewCount,
-        imageUrl
+        imageUrl,
+        productLink: `https://www.amazon.com${productLink}`
       });
     }
   });
