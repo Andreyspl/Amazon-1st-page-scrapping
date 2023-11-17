@@ -1,12 +1,13 @@
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const path = require('path');
 
 const app = express();
 const port = 3000;
 
-// Serve static files from the "public" directory
-app.use(express.static('public'));
+// Serve static files
+app.use(express.static('.'));
 
 // Set CORS headers
 app.use((req, res, next) => {
@@ -87,14 +88,12 @@ app.get('/api/scrape', async (req, res) => {
   res.json(productDetails);
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
-});
-
-const path = require('path');
-
 // Serve the index.html file
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`App listening at http://localhost:${port}`);
 });
