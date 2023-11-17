@@ -47,45 +47,49 @@ async function fetchAmazonPage(keyword) {
 }
 
 // Parses the product details from the HTML of an Amazon page
-function parseProductDetails(html) {
+function parseProductDetails(html, asin) {
   const $ = cheerio.load(html);
-  const productDetails = [];
+  let productDetails = null;
+  let position = -1;
 
   $('.s-result-item').each((index, element) => {
-    const title = $(element).find('.a-link-normal .a-text-normal').text();
-    const rating = $(element).find('.a-icon-star-small .a-icon-alt').text();
-    const reviewCount = $(element).find('.a-link-normal .a-size-base').text();
-    const imageUrl = $(element).find('.a-link-normal .s-image').attr('src');
-    const productLink = $(element).find('.a-link-normal.a-text-normal').attr('href');
-    // Only products with title, rating, reviewCount, image and productLink will be scrapped
-    if (title && rating && reviewCount && imageUrl && productLink) {
-      productDetails.push({
+    const productAsin = $(element).attr('data-asin');
+    if (productAsin === asin) {
+      const title = $(element).find('.a-link-normal .a-text-normal').text();
+      const rating = $(element).find('.a-icon-star-small .a-icon-alt').text();
+      const reviewCount = $(element).find('.a-link-normal .a-size-base').text();
+      const imageUrl = $(element).find('.a-link-normal .s-image').attr('src');
+      const productLink = $(element).find('.a-link-normal.a-text-normal').attr('href');
+      productDetails = {
         title,
         rating,
         reviewCount,
         imageUrl,
         productLink: `https://www.amazon.com${productLink}`
-      });
+      };
+      position = index + 1;
+      return false; // Termina o loop .each
     }
   });
 
-  return productDetails;
+  return { productDetails, position };
 }
 
 // Endpoint to scrape Amazon for a given keyword
 app.get('/api/scrape', async (req, res) => {
+  const asin = req.query.asin;
   const keyword = req.query.keyword;
-  if (!keyword) {
-    return res.status(400).json({ error: 'The keyword cannot be empty' });
+  if (!asin || !keyword) {
+    return res.status(400).json({ error: 'O ASIN e a palavra-chave não podem estar vazios' });
   }
 
   const html = await fetchAmazonPage(keyword);
   if (!html) {
-    return res.status(500).json({ error: 'Failed to scrape Amazon' });
+    return res.status(500).json({ error: 'Falha ao raspar a Amazon' });
   }
 
-  const productDetails = parseProductDetails(html);
-  res.json(productDetails);
+  const { productDetails, position } = parseProductDetails(html, asin);
+  res.json({ productDetails, position });
 });
 
 // Serve the index.html file

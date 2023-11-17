@@ -12,44 +12,45 @@
   <link href="/global.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark m-0">
-        <div class="container-fluid">
-            <!-- Amazon logo -->
-            <a class="navbar-brand me-5" href="#"><img src="https://pngimg.com/uploads/amazon/amazon_PNG25.png" alt="Amazon Logo"></a>
+  <!-- Navigation bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark m-0">
+      <div class="container-fluid">
+          <!-- Amazon logo -->
+          <a class="navbar-brand me-5" href="#"><img src="https://pngimg.com/uploads/amazon/amazon_PNG25.png" alt="Amazon Logo"></a>
 
-            <!-- Navigation bar toggle button for smaller screens -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+          <!-- Navigation bar toggle button for smaller screens -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
 
-            <!-- Navigation links -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 fw-bold">
-                    <li class="nav-item me-3">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item me-3">
-                        <a class="nav-link" target="_blank" href="https://github.com/Andreyspl/Amazon-scrapping">GitHub Repo</a>
-                    </li>
-                </ul>
+          <!-- Navigation links -->
+          <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0 fw-bold">
+                  <li class="nav-item me-3">
+                      <a class="nav-link active" aria-current="page" href="#">Home</a>
+                  </li>
+                  <li class="nav-item me-3">
+                      <a class="nav-link" target="_blank" href="https://github.com/Andreyspl/Amazon-scrapping">GitHub Repo</a>
+                  </li>
+              </ul>
 
-                <!-- Search form -->
-                <form class="d-flex flex-grow-1 mt-3">
-                    <input type="text" id="keyword" placeholder="Enter keyword" aria-label="Keyword" class="form-control me-2 flex-grow-1">
-                    <button id="scrape" class="btn btn-primary flex-shrink-1" style="width: auto;">Scrape</button>
-                </form>
-            </div>
-        </div>
-    </nav>    
+              <!-- Search form -->
+              <form class="d-flex flex-grow-1 mt-3">
+                  <input type="text" id="asin" placeholder="Enter ASIN" aria-label="ASIN" class="form-control me-2 flex-grow-1">
+                  <input type="text" id="keyword" placeholder="Enter keyword" aria-label="Keyword" class="form-control me-2 flex-grow-1">
+                  <button id="scrape" class="btn btn-primary flex-shrink-1" style="width: auto;">Scrape</button>
+              </form>
+          </div>
+      </div>
+  </nav>    
 
-    <!-- Results container -->
-    <div id="results"></div>
+  <!-- Results container -->
+  <div id="results"></div>
 
-    <!-- Error message -->
-    <div id="error" class="alert alert-danger" role="alert" style="display: none;"></div>
+  <!-- Error message -->
+  <div id="error" class="alert alert-danger" role="alert" style="display: none;"></div>
 
-    <!-- JavaScript to handle scraping -->
-    <script src="/server.js"></script>
+  <!-- JavaScript to handle scraping -->
+  <script src="/server.js"></script>
 </body>
 </html>
